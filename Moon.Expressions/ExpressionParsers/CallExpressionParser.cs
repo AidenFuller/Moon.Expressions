@@ -12,6 +12,7 @@ namespace Moon.Expressions.ExpressionParsers
         public string Parse(Expression expression)
         {
             var callExpression = (MethodCallExpression)expression;
+            return null;
         }
     }
 }

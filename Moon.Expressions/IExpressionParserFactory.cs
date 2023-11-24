@@ -5,7 +5,7 @@ namespace Moon.Expressions;
 
 public interface IExpressionParserFactory
 {
-    IExpressionParser GetParser(ExpressionType expressionType);
+    IExpressionParser GetParser(ExpressionType expressionType, bool isRoot = false);
 }
 
 public class ExpressionParserFactory : IExpressionParserFactory
@@ -17,10 +17,10 @@ public class ExpressionParserFactory : IExpressionParserFactory
         _constantResolver = constantResolver ?? throw new ArgumentNullException(nameof(constantResolver));
     }
 
-    public IExpressionParser GetParser(ExpressionType expressionType) => expressionType switch
+    public IExpressionParser GetParser(ExpressionType expressionType, bool isRoot = false) => expressionType switch
     {
-        ExpressionType.AndAlso => new SimpleBinaryExpressionParser(this, "AND", true),
-        ExpressionType.OrElse => new SimpleBinaryExpressionParser(this, "OR", true),
+        ExpressionType.AndAlso => new SimpleBinaryExpressionParser(this, "AND", !isRoot),
+        ExpressionType.OrElse => new SimpleBinaryExpressionParser(this, "OR", !isRoot),
         ExpressionType.Equal => new SimpleBinaryExpressionParser(this, "="),
         ExpressionType.NotEqual => new SimpleBinaryExpressionParser(this, "<>"),
         ExpressionType.GreaterThan => new SimpleBinaryExpressionParser(this, ">"),

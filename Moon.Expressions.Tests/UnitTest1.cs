@@ -21,15 +21,20 @@ public class UnitTest1
     [Fact]
     public void Test1()
     {
-        var s = Parse<TestEntity, bool>(x => x.TestInt == 5);
+        var int1 = 10;
+        var string1 = "10";
+        object obj1 = 10;
 
-        Assert.Equal("((6) = (10)) AND (((10) = (10)) OR ((10) = (1)))", s);
+        Assert.Equal("x.TestInt = 5", Parse<TestEntity, bool>(x => x.TestInt == 5));
+        Assert.Equal("x.TestInt = 5 AND 5 = 10", Parse<TestEntity, bool>(x => x.TestInt == 5 && (5 == int1)));
+        Assert.Equal("CAST(10 AS INT) = 5 AND (10 = 5 OR '10' = '10')", Parse<TestEntity, bool>(x => (int)obj1 == 5 && (int1 == 5 || string1 == "10")));
+        Assert.Equal("COALESCE(10, x.TestInt) = 5", Parse<TestEntity, bool>(x => (TTT ?? x.TestInt) == 5));
     }
 
     private string Parse<TInput, TResult>(Expression<Func<TInput, TResult>> expression)
     {
         var expressionParserProvider = _serviceProvider.GetRequiredService<IExpressionParserFactory>();
-        return expressionParserProvider.GetParser(expression.Body.NodeType).Parse(expression.Body);
+        return expressionParserProvider.GetParser(expression.Body.NodeType, true).Parse(expression.Body);
     }
 
     public class TestEntity

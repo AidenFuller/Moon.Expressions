@@ -33,6 +33,7 @@ public class SimpleBinaryExpressionParser : BinaryExpressionParserBase
     public SimpleBinaryExpressionParser(IExpressionParserFactory expressionParserProvider, string operation, bool wrappingBrackets = false) : base(expressionParserProvider)
     {
         _operation = operation ?? throw new ArgumentNullException(nameof(operation));
+        _wrappingBrackets = wrappingBrackets;
     }
 
     public override string Evaluate(string left, string right)
