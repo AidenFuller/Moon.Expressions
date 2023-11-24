@@ -13,47 +13,17 @@ public interface IConstantResolver
 
 public class ConstantResolver : IConstantResolver
 {
-    public string Resolve(object? value)
+    public string Resolve(object? value) => value switch
     {
-        if (value == null)
-        {
-            return "NULL";
-        }
-        else if (value is char c)
-        {
-            return $"'{c}'";
-        }
-        else if (value is string text)
-        {
-            return $"'{text}'";
-        }
-        else if (value is bool bit)
-        {
-            return bit ? "1" : "0";
-        }
-        else if (value is int i)
-        {
-            return i.ToString();
-        }
-        else if (value is decimal dec)
-        {
-            return $"{dec:D}";
-        }
-        else if (value is double dbl)
-        {
-            return dbl.ToString();
-        }
-        else if (value is DateTime dt)
-        {
-            return $"'{dt:yyyy-MM-dd hh:mm:ss}'";
-        }
-        else if (value is DateOnly dateOnly)
-        {
-            return $"'{dateOnly:yyyy-MM-dd}'";
-        }
-        else
-        {
-            throw new NotSupportedException("The type of this constant is not supported");
-        }
-    }
+        null => "NULL",
+        char c => $"'{c}'",
+        string text => $"'{text}'",
+        bool bit => bit ? "1" : "0",
+        int i => i.ToString(),
+        decimal dec => $"{dec:D}",
+        double dbl => dbl.ToString(),
+        DateTime dt => $"'{dt:yyyy-MM-dd hh:mm:ss}'",
+        DateOnly dateOnly => $"'{dateOnly:yyyy-MM-dd}'",
+        _ => throw new NotSupportedException("The type of this constant is not supported")
+    };
 }
