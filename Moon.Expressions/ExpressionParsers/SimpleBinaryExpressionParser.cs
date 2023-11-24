@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Moon.Expressions.Extensions;
+using System.Linq.Expressions;
 
 namespace Moon.Expressions.ExpressionParsers;
 
@@ -15,8 +16,8 @@ public abstract class BinaryExpressionParserBase : IExpressionParser
     {
         var binaryExpression = (BinaryExpression)expression;
 
-        var left = _expressionParserFactory.GetParser(binaryExpression.Left.NodeType).Parse(binaryExpression.Left);
-        var right = _expressionParserFactory.GetParser(binaryExpression.Right.NodeType).Parse(binaryExpression.Right);
+        var left = _expressionParserFactory.ResolveAndParse(binaryExpression.Left);
+        var right = _expressionParserFactory.ResolveAndParse(binaryExpression.Right);
 
         return Evaluate(left, right);
     }
@@ -27,16 +28,19 @@ public abstract class BinaryExpressionParserBase : IExpressionParser
 public class SimpleBinaryExpressionParser : BinaryExpressionParserBase
 {
     private readonly string _operation;
+    private readonly bool _wrappingBrackets;
 
-    public SimpleBinaryExpressionParser(IExpressionParserFactory expressionParserProvider, string operation) : base(expressionParserProvider)
+    public SimpleBinaryExpressionParser(IExpressionParserFactory expressionParserProvider, string operation, bool wrappingBrackets = false) : base(expressionParserProvider)
     {
         _operation = operation ?? throw new ArgumentNullException(nameof(operation));
     }
 
     public override string Evaluate(string left, string right)
     {
-        return $"({left}) {_operation} ({right})";
+        return Wrap($"{left} {_operation} {right}");
     }
+
+    private string Wrap(string text) => _wrappingBrackets ? $"({text})" : text;
 }
 
 public class FunctionBinaryExpressionParser : BinaryExpressionParserBase

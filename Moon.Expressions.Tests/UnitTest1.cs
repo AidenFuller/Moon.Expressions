@@ -16,13 +16,12 @@ public class UnitTest1
         _serviceProvider = services.BuildServiceProvider();
     }
 
-    public int TTT => 10;
+    public int? TTT => 10;
 
     [Fact]
     public void Test1()
     {
-        var xxx = 10;
-        var s = Parse<int, bool>(x => (6 % xxx == 2) && (TTT == xxx || TTT == 1));
+        var s = Parse<TestEntity, bool>(x => x.TestInt == 5);
 
         Assert.Equal("((6) = (10)) AND (((10) = (10)) OR ((10) = (1)))", s);
     }
@@ -31,5 +30,10 @@ public class UnitTest1
     {
         var expressionParserProvider = _serviceProvider.GetRequiredService<IExpressionParserFactory>();
         return expressionParserProvider.GetParser(expression.Body.NodeType).Parse(expression.Body);
+    }
+
+    public class TestEntity
+    {
+        public int TestInt { get; set; }
     }
 }

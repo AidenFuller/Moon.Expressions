@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Moon.Expressions.Extensions;
+using System.Linq.Expressions;
 
 namespace Moon.Expressions.ExpressionParsers;
 
@@ -31,9 +32,14 @@ public class MemberAccessExpressionParser : IExpressionParser
 
             return _constantResolver.Resolve(rawValue);
         }
+        else if (memberExpression.Expression.NodeType == ExpressionType.Parameter)
+        {
+            var parameter = _expressionParserFactory.ResolveAndParse(memberExpression.Expression);
+            return $"{parameter}.{memberExpression.Member.Name}";
+        }
         else
         {
-            return _expressionParserFactory.GetParser(memberExpression.Expression.NodeType!).Parse(memberExpression.Expression!);
+            return _expressionParserFactory.ResolveAndParse(memberExpression.Expression);
         }
     }
 }
