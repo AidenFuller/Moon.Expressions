@@ -22,14 +22,14 @@ public class UnitTest1
     public void Test1()
     {
         var xxx = 10;
-        var s = Parse<int, bool>(x => TTT == 5 || 6 == xxx);
+        var s = Parse<int, bool>(x => (6 % xxx == 2) && (TTT == xxx || TTT == 1));
 
-        Console.WriteLine(s);
+        Assert.Equal("((6) = (10)) AND (((10) = (10)) OR ((10) = (1)))", s);
     }
 
     private string Parse<TInput, TResult>(Expression<Func<TInput, TResult>> expression)
     {
-        var expressionParserProvider = _serviceProvider.GetRequiredService<IExpressionParserProvider>();
-        return expressionParserProvider.GetParser(expression.Body).Parse(expression.Body);
+        var expressionParserProvider = _serviceProvider.GetRequiredService<IExpressionParserFactory>();
+        return expressionParserProvider.GetParser(expression.Body.NodeType).Parse(expression.Body);
     }
 }

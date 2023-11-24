@@ -1,9 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Moon.Expressions.ExpressionParsers;
 
 namespace Moon.Expressions.DependencyInjection
 {
@@ -12,12 +8,8 @@ namespace Moon.Expressions.DependencyInjection
         public static IServiceCollection AddExpressionParsers(this IServiceCollection services)
         {
             return services
-                .AddSingleton<IExpressionParserProvider, ExpressionParserProvider>()
-                .Scan(scan => scan
-                    .FromExecutingAssembly()
-                    .AddClasses(classes => classes.AssignableTo<IExpressionParser>())
-                    .AsImplementedInterfaces()
-                    .WithSingletonLifetime());
+                .AddSingleton<IExpressionParserFactory, ExpressionParserFactory>()
+                .AddSingleton<IConstantResolver, ConstantResolver>();
         }
     }
 }

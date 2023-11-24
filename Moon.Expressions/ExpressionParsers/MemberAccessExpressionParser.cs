@@ -4,12 +4,12 @@ namespace Moon.Expressions.ExpressionParsers;
 
 public class MemberAccessExpressionParser : IExpressionParser
 {
-    private readonly IExpressionParserProvider _expressionParserProvider;
+    private readonly IExpressionParserFactory _expressionParserFactory;
     private readonly IConstantResolver _constantResolver;
 
-    public MemberAccessExpressionParser(IExpressionParserProvider expressionParserProvider, IConstantResolver constantResolver)
+    public MemberAccessExpressionParser(IExpressionParserFactory expressionParserFactory, IConstantResolver constantResolver)
     {
-        _expressionParserProvider = expressionParserProvider ?? throw new ArgumentNullException(nameof(expressionParserProvider));
+        _expressionParserFactory = expressionParserFactory ?? throw new ArgumentNullException(nameof(expressionParserFactory));
         _constantResolver = constantResolver ?? throw new ArgumentNullException(nameof(constantResolver));
     }
 
@@ -33,7 +33,7 @@ public class MemberAccessExpressionParser : IExpressionParser
         }
         else
         {
-            return _expressionParserProvider.GetParser(memberExpression.Expression!).Parse(memberExpression.Expression!);
+            return _expressionParserFactory.GetParser(memberExpression.Expression.NodeType!).Parse(memberExpression.Expression!);
         }
     }
 }
