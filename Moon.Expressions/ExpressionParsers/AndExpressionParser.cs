@@ -23,7 +23,7 @@ namespace Moon.Expressions.ExpressionParsers
             var andExpression = (BinaryExpression)expression;
 
             var left = _expressionParserProvider.GetParser(andExpression.Left).Parse(andExpression.Left);
-            var right = _expressionParserProvider.GetParser(andExpression.Right).Parse(andExpression.Left);
+            var right = _expressionParserProvider.GetParser(andExpression.Right).Parse(andExpression.Right);
 
             return $"({left}) AND ({right})";
         }
