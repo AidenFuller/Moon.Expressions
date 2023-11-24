@@ -3,12 +3,12 @@ using System.Linq.Expressions;
 
 namespace Moon.Expressions;
 
-public interface IExpressionParserFactory
+public interface IExpressionParserProvider
 {
     IExpressionParser GetParser(Expression expression);
 }
 
-public class ExpressionParserProvider : IExpressionParserFactory
+public class ExpressionParserProvider : IExpressionParserProvider
 {
     private readonly Lazy<Dictionary<ExpressionType, IExpressionParser>> _expressionParsersByType;
 

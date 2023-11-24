@@ -4,9 +4,9 @@ namespace Moon.Expressions.ExpressionParsers;
 
 public class NotEqualExpressionParser : IExpressionParser
 {
-    private readonly IExpressionParserFactory _expressionParserProvider;
+    private readonly IExpressionParserProvider _expressionParserProvider;
 
-    public NotEqualExpressionParser(IExpressionParserFactory expressionParserProvider)
+    public NotEqualExpressionParser(IExpressionParserProvider expressionParserProvider)
     {
         _expressionParserProvider = expressionParserProvider ?? throw new ArgumentNullException(nameof(expressionParserProvider));
     }

@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using Moon.Expressions.ExpressionParsers;
+using Moon.Expressions.DependencyInjection;
 using System.Linq.Expressions;
 
 namespace Moon.Expressions.Tests;
@@ -11,14 +11,7 @@ public class UnitTest1
     public UnitTest1()
     {
         var services = new ServiceCollection();
-        services
-            .AddSingleton<IExpressionParserFactory, ExpressionParserProvider>()
-            .AddSingleton<IExpressionParser, EqualExpressionParser>()
-            .AddSingleton<IExpressionParser, NotEqualExpressionParser>()
-            .AddSingleton<IExpressionParser, MemberAccessExpressionParser>()
-            .AddSingleton<IExpressionParser, AndExpressionParser>()
-            .AddSingleton<IExpressionParser, OrExpressionParser>()
-            .AddSingleton<IExpressionParser, ConstantExpressionParser>();
+        services.AddExpressionParsers();
 
         _serviceProvider = services.BuildServiceProvider();
     }
@@ -28,14 +21,15 @@ public class UnitTest1
     [Fact]
     public void Test1()
     {
-        var s = Parse<int, bool>(x => 4 == 5 || 6 == TTT);
+        var xxx = 10;
+        var s = Parse<int, bool>(x => TTT == 5 || 6 == xxx);
 
         Console.WriteLine(s);
     }
 
     private string Parse<TInput, TResult>(Expression<Func<TInput, TResult>> expression)
     {
-        var expressionParserProvider = _serviceProvider.GetRequiredService<IExpressionParserFactory>();
+        var expressionParserProvider = _serviceProvider.GetRequiredService<IExpressionParserProvider>();
         return expressionParserProvider.GetParser(expression.Body).Parse(expression.Body);
     }
 }

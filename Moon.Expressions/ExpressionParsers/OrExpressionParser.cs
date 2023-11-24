@@ -4,9 +4,9 @@ namespace Moon.Expressions.ExpressionParsers;
 
 public class OrExpressionParser : IExpressionParser
 {
-    private readonly IExpressionParserFactory _expressionParserProvider;
+    private readonly IExpressionParserProvider _expressionParserProvider;
 
-    public OrExpressionParser(IExpressionParserFactory expressionParserProvider)
+    public OrExpressionParser(IExpressionParserProvider expressionParserProvider)
     {
         _expressionParserProvider = expressionParserProvider ?? throw new ArgumentNullException(nameof(expressionParserProvider));
     }

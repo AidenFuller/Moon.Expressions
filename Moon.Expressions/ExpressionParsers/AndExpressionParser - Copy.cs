@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Moon.Expressions.ExpressionParsers
 {
-    public class AndExpressionParser : IExpressionParser
+    public class AddExpressionParser : IExpressionParser
     {
         private readonly IExpressionParserProvider _expressionParserProvider;
 
-        public AndExpressionParser(IExpressionParserProvider expressionParserProvider)
+        public AddExpressionParser(IExpressionParserProvider expressionParserProvider)
         {
             _expressionParserProvider = expressionParserProvider ?? throw new ArgumentNullException(nameof(expressionParserProvider));
         }
@@ -25,7 +25,7 @@ namespace Moon.Expressions.ExpressionParsers
             var left = _expressionParserProvider.GetParser(andExpression.Left).Parse(andExpression.Left);
             var right = _expressionParserProvider.GetParser(andExpression.Right).Parse(andExpression.Left);
 
-            return $"({left}) AND ({right})";
+            return $"{left} + {right}";
         }
     }
 }
