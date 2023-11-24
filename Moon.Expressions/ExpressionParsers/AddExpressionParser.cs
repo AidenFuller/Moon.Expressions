@@ -16,7 +16,7 @@ namespace Moon.Expressions.ExpressionParsers
             _expressionParserProvider = expressionParserProvider ?? throw new ArgumentNullException(nameof(expressionParserProvider));
         }
 
-        public ExpressionType ExpressionType => ExpressionType.AndAlso;
+        public ExpressionType ExpressionType => ExpressionType.Add;
 
         public string Parse(Expression expression)
         {
