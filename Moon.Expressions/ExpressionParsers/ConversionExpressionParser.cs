@@ -15,14 +15,17 @@ public class ConversionExpressionParser : IExpressionParser
     public string Parse(Expression expression)
     {
         var unaryExpression = (UnaryExpression)expression;
-        if (unaryExpression.Type.IsAssignableTo(typeof(Nullable)))
-            _expressionParserFactory.GetParser(unaryExpression.Operand.NodeType).Parse(unaryExpression.Operand);
+        var castType = Nullable.GetUnderlyingType(unaryExpression.Type) ?? unaryExpression.Type;
+        var operandType = Nullable.GetUnderlyingType(unaryExpression.Operand.Type) ?? unaryExpression.Operand.Type;
+
+        if (castType != operandType)
+        {
+            return $"CAST({_expressionParserFactory.ResolveAndParse(unaryExpression.Operand)} AS {GetCastType(castType)})";
+        }
         else
         {
-            return $"CAST({_expressionParserFactory.ResolveAndParse(unaryExpression.Operand)} AS {GetCastType(unaryExpression.Type)})";
+            return _expressionParserFactory.ResolveAndParse(unaryExpression.Operand);
         }
-
-        throw new NotImplementedException();
     }
 
     private static string GetCastType(Type type)

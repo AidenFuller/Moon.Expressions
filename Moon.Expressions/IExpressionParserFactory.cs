@@ -5,7 +5,7 @@ namespace Moon.Expressions;
 
 public interface IExpressionParserFactory
 {
-    IExpressionParser GetParser(ExpressionType expressionType, bool isRoot = false);
+    IExpressionParser GetParser(Expression expression, bool isRoot = false);
 }
 
 public class ExpressionParserFactory : IExpressionParserFactory
@@ -17,7 +17,7 @@ public class ExpressionParserFactory : IExpressionParserFactory
         _constantResolver = constantResolver ?? throw new ArgumentNullException(nameof(constantResolver));
     }
 
-    public IExpressionParser GetParser(ExpressionType expressionType, bool isRoot = false) => expressionType switch
+    public IExpressionParser GetParser(Expression expression, bool isRoot = false) => expression.NodeType switch
     {
         ExpressionType.AndAlso => new SimpleBinaryExpressionParser(this, "AND", !isRoot),
         ExpressionType.OrElse => new SimpleBinaryExpressionParser(this, "OR", !isRoot),
@@ -42,7 +42,19 @@ public class ExpressionParserFactory : IExpressionParserFactory
 
         ExpressionType.Parameter => new ParameterExpressionParser(),
 
+        ExpressionType.Call => GetCallExpressionParser((MethodCallExpression)expression),
 
-        _ => throw new NotSupportedException($"Expression type {expressionType} is not supported.")
+        _ => throw new NotSupportedException($"Expression type {expression.NodeType} is not supported.")
     };
+
+    private IExpressionParser GetCallExpressionParser(MethodCallExpression expression)
+    {
+        var callerType = expression.Object?.Type;
+        var calledMethod = expression.Method.Name;
+
+        if (callerType == typeof(string) && calledMethod == nameof(string.Contains)) return new StringContainsExpressionParser(this);
+        if (callerType == typeof(string) && calledMethod == nameof(string.StartsWith)) return new StringStartsWithExpressionParser(this);
+        if (callerType == typeof(string) && calledMethod == nameof(string.EndsWith)) return new StringEndsWithExpressionParser(this);
+        throw new NotSupportedException($"Call Expression with caller type {callerType.Name} and method {calledMethod} is not supported.");
+    }
 }

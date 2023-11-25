@@ -11,6 +11,6 @@ public static class IExpressionParserFactoryExtensions
 {
     public static string ResolveAndParse(this IExpressionParserFactory expressionParserFactory, Expression expression)
     {
-        return expressionParserFactory.GetParser(expression.NodeType).Parse(expression);
+        return expressionParserFactory.GetParser(expression).Parse(expression);
     }
 }
