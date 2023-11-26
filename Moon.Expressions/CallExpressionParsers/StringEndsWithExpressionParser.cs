@@ -1,26 +1,27 @@
 ﻿using Moon.Expressions.Extensions;
 using System.Linq.Expressions;
-using System.Reflection;
 
-namespace Moon.Expressions.ExpressionParsers;
+namespace Moon.Expressions.CallExpressionParsers;
 
-public class StringEndsWithExpressionParser : IExpressionParser
+public class StringEndsWithExpressionParser : ICallExpressionParser
 {
-    private readonly IExpressionParserFactory _expressionParserFactory;
+    private readonly IExpressionParserProvider _expressionParserFactory;
 
-    public StringEndsWithExpressionParser(IExpressionParserFactory expressionParserFactory)
+    public StringEndsWithExpressionParser(IExpressionParserProvider expressionParserFactory)
     {
         _expressionParserFactory = expressionParserFactory ?? throw new ArgumentNullException(nameof(expressionParserFactory));
     }
 
+    public CallExpressionType CallExpressionType => CallExpressionType.StringEndsWith;
+
     public string Parse(Expression expression)
     {
-        var callExpression = (MethodCallExpression)expression;
+        var methodCallExpression = (MethodCallExpression)expression;
 
         // Ignore further arguments, as the string comparison type is not relevant for SQL. Only the first expression matters
-        var argument = callExpression.Arguments.First();
+        var argument = methodCallExpression.Arguments.First();
 
-        var caller = _expressionParserFactory.ResolveAndParse(callExpression.Object);
+        var caller = _expressionParserFactory.ResolveAndParse(methodCallExpression.Object);
 
         var argumentExpression = Expression.Add(argument, Expression.Constant("%"), Methods.StringConcat);
         var argumentValue = _expressionParserFactory.ResolveAndParse(argumentExpression);

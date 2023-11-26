@@ -1,4 +1,4 @@
-﻿namespace Moon.Expressions.ExpressionParsers;
+﻿namespace Moon.Expressions.SingleTypeExpressionParsers;
 
 public interface IConstantResolver
 {

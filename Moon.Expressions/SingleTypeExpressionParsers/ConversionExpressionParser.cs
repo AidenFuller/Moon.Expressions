@@ -1,13 +1,15 @@
 ﻿using Moon.Expressions.Extensions;
 using System.Linq.Expressions;
 
-namespace Moon.Expressions.ExpressionParsers;
+namespace Moon.Expressions.SingleTypeExpressionParsers;
 
-public class ConversionExpressionParser : IExpressionParser
+public class ConversionExpressionParser : ISingleTypeExpressionParser
 {
-    private readonly IExpressionParserFactory _expressionParserFactory;
+    private readonly IExpressionParserProvider _expressionParserFactory;
 
-    public ConversionExpressionParser(IExpressionParserFactory expressionParserFactory)
+    public ExpressionType ExpressionType => ExpressionType.Convert;
+
+    public ConversionExpressionParser(IExpressionParserProvider expressionParserFactory)
     {
         _expressionParserFactory = expressionParserFactory;
     }

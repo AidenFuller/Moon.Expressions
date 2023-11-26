@@ -1,14 +1,14 @@
 ﻿using Moon.Expressions.Extensions;
 using System.Linq.Expressions;
 
-namespace Moon.Expressions.ExpressionParsers;
+namespace Moon.Expressions.SingleTypeExpressionParsers;
 
-public class MemberAccessExpressionParser : IExpressionParser
+public class MemberAccessExpressionParser : ISingleTypeExpressionParser
 {
-    private readonly IExpressionParserFactory _expressionParserFactory;
+    private readonly IExpressionParserProvider _expressionParserFactory;
     private readonly IConstantResolver _constantResolver;
 
-    public MemberAccessExpressionParser(IExpressionParserFactory expressionParserFactory, IConstantResolver constantResolver)
+    public MemberAccessExpressionParser(IExpressionParserProvider expressionParserFactory, IConstantResolver constantResolver)
     {
         _expressionParserFactory = expressionParserFactory ?? throw new ArgumentNullException(nameof(expressionParserFactory));
         _constantResolver = constantResolver ?? throw new ArgumentNullException(nameof(constantResolver));
