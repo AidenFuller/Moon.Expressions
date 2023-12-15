@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Moon.Expressions.Extensions;
+using System.Collections;
 using System.Linq.Expressions;
 
 namespace Moon.Expressions;
@@ -14,6 +15,7 @@ public enum CallExpressionType
     StringStartsWith,
     StringEndsWith,
     EnumerableContains,
+    DateBetween
 }
 
 internal class CallExpressionTypeEvaluator : ICallExpressionTypeEvaluator
@@ -29,9 +31,11 @@ internal class CallExpressionTypeEvaluator : ICallExpressionTypeEvaluator
         if (callerType == typeof(string) && calledMethod == nameof(string.EndsWith)) return CallExpressionType.StringEndsWith;
 
         if (IsEnumerableExtension(expression) && calledMethod == nameof(Enumerable.Contains)) return CallExpressionType.EnumerableContains;
+        if (IsDateExtension(expression) && calledMethod == nameof(DateExtensions.IsBetween)) return CallExpressionType.DateBetween;
 
         throw new NotSupportedException($"Call Expression with caller type {callerType?.Name} and method {calledMethod} is not supported.");
     }
 
     public bool IsEnumerableExtension(MethodCallExpression expression) => expression.Object == null && expression.Arguments.Any() && typeof(IEnumerable).IsAssignableFrom(expression.Arguments[0].Type);
+    public bool IsDateExtension(MethodCallExpression expression) => expression.Object == null && expression.Arguments.Any() && (expression.Arguments[0].Type == typeof(DateOnly) || expression.Arguments[0].Type == typeof(DateTimeOffset) || expression.Arguments[0].Type == typeof(DateTime));
 }
