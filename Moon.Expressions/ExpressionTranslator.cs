@@ -14,7 +14,7 @@ public class ExpressionTranslator : ExpressionVisitor
 
 	private SqlExpression state;
 
-    public ExpressionTranslator(
+	public ExpressionTranslator(
 		IExpressionTypeCalculator expressionTypeCalculator, 
 		IEnumerable<IBinaryExpressionHandler> binaryExpressionHandlers, 
 		IEnumerable<IUnaryExpressionHandler> unaryExpressionHandlers,
@@ -24,13 +24,13 @@ public class ExpressionTranslator : ExpressionVisitor
 		IEnumerable<IParameterExpressionHandler> parameterExpressionHandlers)
 	{
 		_expressionTypeCalculator = expressionTypeCalculator ?? throw new ArgumentNullException(nameof(expressionTypeCalculator));
-        _binaryExpressionHandlers = binaryExpressionHandlers?.ToDictionary(x => x.ExpressionType) ?? throw new ArgumentNullException(nameof(binaryExpressionHandlers));
+		_binaryExpressionHandlers = binaryExpressionHandlers?.ToDictionary(x => x.ExpressionType) ?? throw new ArgumentNullException(nameof(binaryExpressionHandlers));
 		_unaryExpressionHandlers = unaryExpressionHandlers?.ToDictionary(x => x.ExpressionType) ?? throw new ArgumentNullException(nameof(unaryExpressionHandlers));
 		_constantExpressionHandlers = constantExpressionHandlers?.ToDictionary(x => x.ExpressionType) ?? throw new ArgumentNullException(nameof(constantExpressionHandlers));
 		_methodCallExpressionHandlers = methodCallExpressionHandlers?.ToDictionary(x => x.ExpressionType) ?? throw new ArgumentNullException(nameof(methodCallExpressionHandlers));
 		_memberExpressionHandlers = memberExpressionHandlers?.ToDictionary(x => x.ExpressionType) ?? throw new ArgumentNullException(nameof(memberExpressionHandlers));
 		_parameterExpressionHandlers = parameterExpressionHandlers?.ToDictionary(x => x.ExpressionType) ?? throw new ArgumentNullException(nameof(parameterExpressionHandlers));
-    }
+	}
 
 	public SqlExpression Translate(Expression expression)
 	{
@@ -38,8 +38,8 @@ public class ExpressionTranslator : ExpressionVisitor
 		return state;
 	}
 
-    protected override Expression VisitBinary(BinaryExpression node)
-    {
+	protected override Expression VisitBinary(BinaryExpression node)
+	{
 		var left = Translate(node.Left);
 		var right = Translate(node.Right);
 
@@ -48,18 +48,18 @@ public class ExpressionTranslator : ExpressionVisitor
 
 		state = expression;
 		return node;
-    }
+	}
 
-    protected override Expression VisitUnary(UnaryExpression node)
-    {
-        var operand = Translate(node.Operand);
+	protected override Expression VisitUnary(UnaryExpression node)
+	{
+		var operand = Translate(node.Operand);
 
 		var expressionType = _expressionTypeCalculator.Calculate(node);
 		var expression = _unaryExpressionHandlers[expressionType].Handle(operand);
 
 		state = expression;
 		return node;
-    }
+	}
 
 	protected override Expression VisitConstant(ConstantExpression node)
 	{
@@ -94,8 +94,8 @@ public class ExpressionTranslator : ExpressionVisitor
 		return node;
 	}
 
-    protected override Expression VisitParameter(ParameterExpression node)
-    {
+	protected override Expression VisitParameter(ParameterExpression node)
+	{
 		var name = node.Name;
 
 		var expressionType = _expressionTypeCalculator.Calculate(node);
@@ -103,5 +103,5 @@ public class ExpressionTranslator : ExpressionVisitor
 
 		state = expression;
 		return node;
-    }
+	}
 }
