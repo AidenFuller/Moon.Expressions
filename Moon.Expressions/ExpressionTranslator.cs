@@ -5,7 +5,7 @@ namespace Moon.Expressions;
 public class ExpressionTranslator : ExpressionVisitor
 {
 	private readonly IExpressionTypeCalculator _expressionTypeCalculator;
-    private readonly Dictionary<FullExpressionType, IBinaryExpressionHandler> _binaryExpressionHandlers;
+	private readonly Dictionary<FullExpressionType, IBinaryExpressionHandler> _binaryExpressionHandlers;
 	private readonly Dictionary<FullExpressionType, IUnaryExpressionHandler> _unaryExpressionHandlers;
 	private readonly Dictionary<FullExpressionType, IConstantExpressionHandler> _constantExpressionHandlers;
 	private readonly Dictionary<FullExpressionType, IMethodCallExpressionHandler> _methodCallExpressionHandlers;
