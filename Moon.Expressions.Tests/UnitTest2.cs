@@ -11,7 +11,7 @@ public class UnitTest2
     public void Test()
     {
         var serviceProvider = new ServiceCollection()
-            .AddVisitorPattern()
+            .AddExpressions()
             .UseSqlServerExpressionHandlers()
             .BuildServiceProvider();
 
@@ -23,12 +23,14 @@ public class UnitTest2
         var result = translator.Translate(expression.Body);
         var parameters = result.GetAllParameters();
 
-        result.SqlString.Should().Be("@Value_1 = @Value_2");
-        parameters.Keys.Should().Contain("Value_1");
-        parameters.Keys.Should().Contain("Value_2");
-
-        parameters["Value_1"].Should().Be(false);
-        parameters["Value_2"].Should().Be(true);        
+        result.SqlString.Should().Be("[x].[TestString] = @Value_0 AND ([x].[TestBool] = @Value_1 OR [x].[TestInt] + @Value_2 = @Value_3)");
+        parameters.Should().BeEquivalentTo(new Dictionary<string, object>
+        {
+            ["Value_0"] = "Test",
+            ["Value_1"] = false,
+            ["Value_2"] = 2,
+            ["Value_3"] = 4
+        });      
     }
 
     public class TestEntity
