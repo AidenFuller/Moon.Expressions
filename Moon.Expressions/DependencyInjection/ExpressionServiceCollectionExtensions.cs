@@ -23,4 +23,13 @@ public static class ExpressionServiceCollectionExtensions
             .AsImplementedInterfaces()
             .WithSingletonLifetime());
     }
+
+    public static IServiceCollection AddVisitorPattern(this IServiceCollection services)
+    {
+        return services
+            .AddSingleton<ExpressionTranslatorFactory>()
+            .AddSingleton<IExpressionTypeCalculator, ExpressionTypeCalculator>()
+            .AddScoped<ExpressionTranslator>()
+            .AddScoped<ExpressionParameterProvider>();
+    }
 }

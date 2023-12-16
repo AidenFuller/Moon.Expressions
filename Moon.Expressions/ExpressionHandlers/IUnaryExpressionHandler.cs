@@ -1,8 +1,6 @@
-namespace Moon.Expressions.ExpressionHandlers
-{
-    public interface IUnaryExpressionHandler
-    { 
-        UnaryExpressionType ExpressionType { get; }
-        ISqlExpression Handle(ISqlExpression expression);
-    }
+namespace Moon.Expressions.ExpressionHandlers;
+
+public interface IUnaryExpressionHandler : IExpressionHandler
+{ 
+    SqlExpression Handle(SqlExpression expression);
 }

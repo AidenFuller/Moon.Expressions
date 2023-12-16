@@ -5,53 +5,68 @@ namespace Moon.Expressions;
 
 public interface IExpressionTypeCalculator
 {
-    BinaryExpressionType Calculate(BinaryExpression expression);
-    UnaryExpressionType Calculate(UnaryExpression expression);
-    MethodCallExpressionType Calculate(MethodCallExpression expression);
-    ConstantExpressionType Calculate(ConstantExpression expression);
+    FullExpressionType Calculate(BinaryExpression expression);
+    FullExpressionType Calculate(UnaryExpression expression);
+    FullExpressionType Calculate(MethodCallExpression expression);
+    FullExpressionType Calculate(ConstantExpression expression);
+    FullExpressionType Calculate(MemberExpression expression);
+    FullExpressionType Calculate(ParameterExpression expression);
 }
 
 public class ExpressionTypeCalculator : IExpressionTypeCalculator
 {
-    public BinaryExpressionType Calculate(BinaryExpression expression) => expression.NodeType switch
+    public FullExpressionType Calculate(BinaryExpression expression) => expression.NodeType switch
     {
-        ExpressionType.AndAlso => BinaryExpressionType.And,
-        ExpressionType.OrElse => BinaryExpressionType.Or,
-        ExpressionType.Equal => BinaryExpressionType.Equal,
-        ExpressionType.NotEqual => BinaryExpressionType.NotEqual,
-        ExpressionType.GreaterThan => BinaryExpressionType.GreaterThan,
-        ExpressionType.GreaterThanOrEqual => BinaryExpressionType.GreaterThanOrEqual,
-        ExpressionType.LessThan => BinaryExpressionType.LessThan,
-        ExpressionType.LessThanOrEqual => BinaryExpressionType.LessThanOrEqual,
-        ExpressionType.Add => BinaryExpressionType.Add,
-        ExpressionType.Subtract => BinaryExpressionType.Subtract,
-        ExpressionType.Multiply => BinaryExpressionType.Multiply,
-        ExpressionType.Divide => BinaryExpressionType.Divide,
-        ExpressionType.Coalesce => BinaryExpressionType.Coalesce,
-        ExpressionType.Conditional => BinaryExpressionType.Conditional,
+        ExpressionType.AndAlso => FullExpressionType.And,
+        ExpressionType.OrElse => FullExpressionType.Or,
+        ExpressionType.Equal => FullExpressionType.Equal,
+        ExpressionType.NotEqual => FullExpressionType.NotEqual,
+        ExpressionType.GreaterThan => FullExpressionType.GreaterThan,
+        ExpressionType.GreaterThanOrEqual => FullExpressionType.GreaterThanOrEqual,
+        ExpressionType.LessThan => FullExpressionType.LessThan,
+        ExpressionType.LessThanOrEqual => FullExpressionType.LessThanOrEqual,
+        ExpressionType.Add => FullExpressionType.Add,
+        ExpressionType.Subtract => FullExpressionType.Subtract,
+        ExpressionType.Multiply => FullExpressionType.Multiply,
+        ExpressionType.Divide => FullExpressionType.Divide,
+        ExpressionType.Coalesce => FullExpressionType.Coalesce,
+        ExpressionType.Conditional => FullExpressionType.Conditional,
         _ => throw new NotSupportedException($"Binary expression type {expression.NodeType} is not supported.")
     };
 
-    public UnaryExpressionType Calculate(UnaryExpression expression) => expression.NodeType switch
+    public FullExpressionType Calculate(UnaryExpression expression) => expression.NodeType switch
     {
-        ExpressionType.Not => UnaryExpressionType.Not,
-        ExpressionType.Convert => UnaryExpressionType.Cast,
+        ExpressionType.Not => FullExpressionType.Not,
+        ExpressionType.Convert => FullExpressionType.Cast,
         _ => throw new NotSupportedException($"Unary expression type {expression.NodeType} is not supported.")
     };
 
-    public ConstantExpressionType Calculate(ConstantExpression expression) => expression.Value switch
+    public FullExpressionType Calculate(ConstantExpression expression) => expression.Value switch
     {
-        null => ConstantExpressionType.Null,
-        _ => ConstantExpressionType.Value
+        null => FullExpressionType.Null,
+        _ => FullExpressionType.ConstantValue
     };
 
-    public MethodCallExpressionType Calculate(MethodCallExpression expression)
+    public FullExpressionType Calculate(MethodCallExpression expression)
     {
-        if (expression.Method.DeclaringType == typeof(string) && expression.Method.Name == nameof(string.Contains)) return MethodCallExpressionType.Contains;
-        if (expression.Method.DeclaringType == typeof(string) && expression.Method.Name == nameof(string.StartsWith)) return MethodCallExpressionType.StartsWith;
-        if (expression.Method.DeclaringType == typeof(string) && expression.Method.Name == nameof(string.EndsWith)) return MethodCallExpressionType.EndsWith;
-        if (expression.Method.DeclaringType == typeof(ExpressionMethodExtensions) && expression.Method.Name == nameof(ExpressionMethodExtensions.In)) return MethodCallExpressionType.In;
-        if (expression.Method.DeclaringType == typeof(ExpressionMethodExtensions) && expression.Method.Name == nameof(ExpressionMethodExtensions.Between)) return MethodCallExpressionType.Between;
+        if (expression.Method.DeclaringType == typeof(string) && expression.Method.Name == nameof(string.Contains)) return FullExpressionType.Contains;
+        if (expression.Method.DeclaringType == typeof(string) && expression.Method.Name == nameof(string.StartsWith)) return FullExpressionType.StartsWith;
+        if (expression.Method.DeclaringType == typeof(string) && expression.Method.Name == nameof(string.EndsWith)) return FullExpressionType.EndsWith;
+        if (expression.Method.DeclaringType == typeof(ExpressionMethodExtensions) && expression.Method.Name == nameof(ExpressionMethodExtensions.In)) return FullExpressionType.In;
+        if (expression.Method.DeclaringType == typeof(ExpressionMethodExtensions) && expression.Method.Name == nameof(ExpressionMethodExtensions.Between)) return FullExpressionType.Between;
         throw new NotSupportedException($"Method call expression type {expression.Method.Name} is not supported.");
     }
+
+    public FullExpressionType Calculate(MemberExpression expression) => expression.Expression.NodeType switch
+    {
+        ExpressionType.Constant => FullExpressionType.RuntimeVariable,
+        ExpressionType.Parameter => FullExpressionType.ParameterMember,
+        _ => throw new NotSupportedException($"Member expression type {expression.Expression.NodeType} is not supported.")
+    };
+
+    public FullExpressionType Calculate(ParameterExpression expression) => expression.NodeType switch
+    {
+        ExpressionType.Parameter => FullExpressionType.Parameter,
+        _ => throw new NotSupportedException($"Parameter expression type {expression.NodeType} is not supported.")
+    };
 }

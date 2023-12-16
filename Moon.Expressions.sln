@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moon.Expressions", "Moon.Expressions\Moon.Expressions.csproj", "{6179E47F-3F25-4D6C-B2CC-1C7FC504B0A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moon.Expressions", "Moon.Expressions\Moon.Expressions.csproj", "{6179E47F-3F25-4D6C-B2CC-1C7FC504B0A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moon.Expressions.Tests", "Moon.Expressions.Tests\Moon.Expressions.Tests.csproj", "{E7A8A941-3C4D-4569-BB09-EA9D127AC107}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moon.Expressions.Tests", "Moon.Expressions.Tests\Moon.Expressions.Tests.csproj", "{E7A8A941-3C4D-4569-BB09-EA9D127AC107}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moon.Expressions.SqlServer", "Moon.Expressions.SqlServer\Moon.Expressions.SqlServer.csproj", "{1BDDB93D-5F56-40DA-B8F3-6494B2506F87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{E7A8A941-3C4D-4569-BB09-EA9D127AC107}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7A8A941-3C4D-4569-BB09-EA9D127AC107}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7A8A941-3C4D-4569-BB09-EA9D127AC107}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BDDB93D-5F56-40DA-B8F3-6494B2506F87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BDDB93D-5F56-40DA-B8F3-6494B2506F87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BDDB93D-5F56-40DA-B8F3-6494B2506F87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BDDB93D-5F56-40DA-B8F3-6494B2506F87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

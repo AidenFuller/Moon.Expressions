@@ -1,7 +1,6 @@
 namespace Moon.Expressions.ExpressionHandlers;
 
-public interface IMethodCallExpressionHandler
+public interface IMethodCallExpressionHandler : IExpressionHandler
 {
-    MethodCallExpressionType ExpressionType { get; }
-    ISqlExpression Handle(ISqlExpression? caller, params ISqlExpression[] arguments);
+    SqlExpression Handle(SqlExpression? caller, params SqlExpression[] arguments);
 }

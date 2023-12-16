@@ -1,5 +1,8 @@
-public enum BinaryExpressionType
+namespace Moon.Expressions;
+
+public enum FullExpressionType
 {
+    // Binary
     And,
     Or,
     Equal,
@@ -13,35 +16,43 @@ public enum BinaryExpressionType
     Multiply,
     Divide,
     Coalesce,
-    Conditional
-}
+    Conditional,
 
-public enum UnaryExpressionType
-{
+    // Unary
     Not,
-    Cast
-}
+    Cast,
 
-public enum MethodCallExpressionType
-{
+    // Method Call
     Contains,
     StartsWith,
     EndsWith,
     In,
-    Between
-}
+    Between,
 
-public enum ConstantExpressionType
-{
+    // Constant
     Null,
-    Value
+    ConstantValue,
+
+    // Members
+    Parameter,
+    ParameterMember,
+    RuntimeVariable,
 }
 
-
-public static class BinaryExpressionTypeExtensions
+public static class ExpressionTypeExtensions
 {
-    public static bool OrderMatters(this BinaryExpressionType expressionType)
+    public static bool ShouldWrapInBrackets(this FullExpressionType childType, FullExpressionType parentType)
     {
-        return expressionType == BinaryExpressionType.And || expressionType == BinaryExpressionType.Or;
+        return
+            (parentType == FullExpressionType.And && childType == FullExpressionType.Or) ||
+            (parentType == FullExpressionType.Or && childType == FullExpressionType.And) ||
+            (parentType.IsNumericOperation() && childType == FullExpressionType.Subtract) ||
+            (parentType.IsNumericOperation() && childType == FullExpressionType.Divide);
     }
+
+    public static bool IsNumericOperation(this FullExpressionType type) => type switch
+    {
+        FullExpressionType.Add or FullExpressionType.Subtract or FullExpressionType.Multiply or FullExpressionType.Divide => true,
+        _ => false
+    };
 }
